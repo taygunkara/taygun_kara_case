@@ -7,6 +7,7 @@ Welcome to the Insider Careers Test Automation project! This repository contains
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Important Observation](#important-observation)
 - [Key Features](#key-features)
 - [Technologies Used](#technologies-used)
 - [Maven Libraries Used](#maven-libraries-used)
@@ -21,6 +22,16 @@ Welcome to the Insider Careers Test Automation project! This repository contains
 This project provides a robust solution for testing the Insider website's career section. Built with Java, Selenium, and TestNG, it follows industry best practices to ensure stability, maintainability, and readability.
 
 The core of this project is a single, comprehensive **End-to-End (E2E) test case**. This approach was intentionally chosen to validate the entire critical user path in a single, integrated flow, simulating a real user's experience precisely. Instead of breaking down the test into smaller, isolated units, the E2E test ensures that all components—from UI navigation and dynamic filtering to cross-page interactions—work together seamlessly.
+
+## Important Observation
+
+During the development of this test suite, a critical, intermittent bug was identified in the application's filtering functionality. This framework was intentionally designed to be sensitive enough to detect and report this kind of instability.
+
+*   **The Bug:** When filtering jobs by "Department," the job list occasionally fails to update. It continues to display results for "All Departments" instead of the selected "Quality Assurance."
+*   **Reproducibility:** This is an intermittent issue, **observed on multiple occasions** during both manual and automated testing.
+*   **Test Behavior:** As a result, the test will **correctly fail** when it encounters this bug. The test is not broken; it is successfully performing its function by reporting that the application is not behaving as expected.
+
+This approach was chosen over implementing complex retry logic to mask the issue. The primary goal of this QA project is to provide an accurate reflection of the application's quality and user experience, which includes faithfully reporting intermittent failures.
 
 ## Key Features
 - **Page Object Model (POM):** The framework is built on the POM design pattern, ensuring a clean separation between test logic and UI interactions, which makes the code highly reusable and easy to maintain.
