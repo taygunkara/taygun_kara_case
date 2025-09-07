@@ -25,13 +25,27 @@ The core of this project is a single, comprehensive **End-to-End (E2E) test case
 
 ## Important Observation
 
-During the development of this test suite, a critical, intermittent bug was identified in the application's filtering functionality. This framework was intentionally designed to be sensitive enough to detect and report this kind of instability.
+This test suite was designed not only to validate the specified user path but also to act as a sensitive instrument for detecting application instabilities. During development, critical, intermittent issues were identified in the filtering logic, which the test now successfully detects.
 
-*   **The Bug:** When filtering jobs by "Department," the job list occasionally fails to update. It continues to display results for "All Departments" instead of the selected "Quality Assurance."
-*   **Reproducibility:** This is an intermittent issue, **observed on multiple occasions** during both manual and automated testing.
-*   **Test Behavior:** As a result, the test will **correctly fail** when it encounters this bug. The test is not broken; it is successfully performing its function by reporting that the application is not behaving as expected.
+*Note: These observations were made during testing on **Ubuntu OS with Google Chrome.***
 
-This approach was chosen over implementing complex retry logic to mask the issue. The primary goal of this QA project is to provide an accurate reflection of the application's quality and user experience, which includes faithfully reporting intermittent failures.
+### Finding 1: Filter State Inconsistency (Manually & Automatically Confirmed)
+
+*   **Scenario:** The test flow involves clicking a link on the Careers page (`See all QA jobs`) that directs the user to the Open Positions page. **This action pre-selects the "Quality Assurance" department via URL parameters.**
+*   **Observed Bug:** Upon page load, although the filter UI correctly shows "Quality Assurance" as selected, the job list intermittently displays results for "All Departments." Re-selecting the already active "Quality Assurance" filter does not trigger an update.
+*   **Workaround:** The issue resolves only after selecting a different department and then re-selecting "Quality Assurance," or by performing a full page refresh.
+*   **Test Behavior:** The automation script **correctly fails** at the validation step when it encounters this state inconsistency, as the displayed jobs do not match the selected filter.
+
+### Finding 2: Filter Application Race Condition (Observed via Automation)
+
+*   **Scenario:** The E2E test selects both a "Location" and a "Department" in sequence as required by the test case.
+*   **Observed Bug:** On rare occasions, the job list fails to reflect both filter criteria and defaults to showing "All Jobs." This suggests a potential race condition in the front-end application. A screenshot of this behavior has been captured.
+
+### Strategic Decision: Why Workarounds Were Intentionally Not Implemented
+
+It would have been technically possible to force the test to "pass" every time by implementing workarounds (e.g., adding a page refresh or re-selecting filters until the correct state is achieved).
+
+However, **this approach was intentionally avoided.** The primary goal of a robust QA process is to provide an honest and accurate reflection of the end-user experience. Masking these intermittent bugs with automation tricks would hide significant usability issues and provide a false sense of security. Therefore, the test is designed to be "brittle" in the face of these specific bugs, ensuring they are transparently reported through its failure.
 
 ## Key Features
 - **Page Object Model (POM):** The framework is built on the POM design pattern, ensuring a clean separation between test logic and UI interactions, which makes the code highly reusable and easy to maintain.
