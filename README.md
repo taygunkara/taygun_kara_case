@@ -41,6 +41,12 @@ This test suite was designed not only to validate the specified user path but al
 *   **Scenario:** The E2E test selects both a "Location" and a "Department" in sequence as required by the test case.
 *   **Observed Bug:** On rare occasions, the job list fails to reflect both filter criteria and defaults to showing "All Jobs." This suggests a potential race condition in the front-end application. A screenshot of this behavior has been captured.
 
+### Finding 3: Deep DOM Instability Leading to StaleElementReferenceException
+
+*   **Observation:** Beyond the logical bugs, the test suite frequently encountered `StaleElementReferenceException`. This indicates a high level of DOM instability, where elements are being re-rendered or removed while the test is trying to interact with them.
+*   **Attempted Solution:** To combat this, a robust retry mechanism was implemented within the `WaitUtils` class. This solution attempts to re-locate the element multiple times if a SERE is caught, which is a standard best practice for handling this issue.
+*   **Result:** Despite this robust solution, the test **still occasionally fails due to this exception.** This is a significant finding: it suggests that the application's front-end instability is so pronounced that even standard resilience patterns are not always sufficient. This points to a deeper performance or architectural issue that would require investigation in collaboration with the development team.
+
 ### Strategic Decision: Why Workarounds Were Intentionally Not Implemented
 
 It would have been technically possible to force the test to "pass" every time by implementing workarounds (e.g., adding a page refresh or re-selecting filters until the correct state is achieved).
