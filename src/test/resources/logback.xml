@@ -1,0 +1,6 @@
+<configuration>
+    <logger name="com.insider" level="info"/>
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
