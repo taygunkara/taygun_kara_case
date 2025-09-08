@@ -51,8 +51,15 @@ This test suite was designed not only to validate the specified user path but al
 
 It would have been technically possible to force the test to "pass" every time by implementing workarounds (e.g., adding a page refresh or re-selecting filters until the correct state is achieved).
 
-However, **this approach was intentionally avoided.** The primary goal of a robust QA process is to provide an honest and accurate reflection of the end-user experience. Masking these intermittent bugs with automation tricks would hide significant usability issues and provide a false sense of security. Therefore, the test is designed to be "brittle" in the face of these specific bugs, ensuring they are transparently reported through its failure.
+However, **this approach was intentionally avoided.** The primary goal of a robust QA process is to provide an honest and accurate reflection of the end-user experience. Masking intermittent bugs with automation tricks would hide significant usability issues and provide a false sense of security.
 
+**A Deeper Look into the `StaleElementReferenceException`:**
+
+Further investigation into the persistent `StaleElementReferenceException` revealed a crucial insight. While a robust retry mechanism was implemented to handle this, its occasional failure suggests a more complex root cause than simple DOM re-rendering. **The nature of the failure strongly indicates that the problematic elements may be managed within a separate `iframe` context.**
+
+In such a scenario, a simple retry would still fail because it operates within the main document's context, unable to "see" inside the correct frame. The correct solution would involve identifying the right frame and switching the driver's context before interacting with the element.
+
+This deeper analysis reinforces the decision not to implement a simple workaround. A test that blindly refreshes the page would mask this critical architectural detail. Therefore, the test is designed to be "brittle" in the face of these specific bugs, ensuring that these deeper technical challenges are transparently reported through its failure.
 ## Key Features
 - **Page Object Model (POM):** The framework is built on the POM design pattern, ensuring a clean separation between test logic and UI interactions, which makes the code highly reusable and easy to maintain.
 - **Robust WebDriver Management:** Utilizes a `DriverManager` with `ThreadLocal` to guarantee thread safety, making the framework scalable and ready for parallel test execution.
