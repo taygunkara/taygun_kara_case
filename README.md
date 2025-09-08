@@ -53,6 +53,7 @@ However, **this approach was intentionally avoided.** The primary goal of a robu
 - **Data-Driven Testing:** Test data (location, department) is externalized into a `JSON` file and fed into tests using TestNG's `DataProvider`, allowing for easy modification and extension without changing the test code.
 - **Advanced Logging:** Integrated with `SLF4J` and `Logback` to provide detailed, step-by-step logs of the entire test execution flow. This makes debugging incredibly efficient and provides full visibility into the test's lifecycle.
 - **Smart Wait Mechanism:** A centralized `WaitUtils` class handles all explicit waits, eliminating flaky tests and avoiding the use of unreliable static waits (`Thread.sleep`).
+- **Resilient to DOM Instability:** The framework's core wait mechanism includes an intelligent retry logic. It automatically handles common `StaleElementReferenceException` errors, making the tests highly resilient to the flakiness of modern, dynamic web applications.
 - **Robust Error Handling:** The framework includes intelligent error handling, such as automatically retrying a click action with JavaScript if a standard click is intercepted, which significantly increases test stability.
 - **Cross-Browser Compatibility:** The browser type can be easily configured in a properties file, allowing the same test suite to run on different browsers like Chrome, Firefox, and Edge.
 
